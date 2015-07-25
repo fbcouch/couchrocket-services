@@ -1,11 +1,23 @@
-# --- Created by Slick DDL
-# To stop Slick DDL generation, remove this comment and start using Evolutions
+# --- Created by Ebean DDL
+# To stop Ebean DDL generation, remove this comment and start using Evolutions
 
 # --- !Ups
 
-create table "USERS" ("NAME" VARCHAR(254) NOT NULL,"ID" SERIAL NOT NULL PRIMARY KEY);
+create table score (
+  id                        bigint not null,
+  name                      varchar(255),
+  score                     bigint,
+  constraint pk_score primary key (id))
+;
+
+create sequence score_seq;
+
+
+
 
 # --- !Downs
 
-drop table "USERS";
+drop table if exists score cascade;
+
+drop sequence if exists score_seq;
 
