@@ -3,6 +3,8 @@ package controllers;
 import akka.actor.ActorRef;
 import akka.actor.Cancellable;
 import akka.actor.Props;
+import com.fasterxml.jackson.databind.JsonNode;
+import models.GameRoom;
 import models.Pinger;
 import play.libs.Akka;
 import play.libs.F;
@@ -17,31 +19,21 @@ import static java.util.concurrent.TimeUnit.SECONDS;
  * Created by jami on 7/25/15.
  */
 public class Socket extends Controller {
-    public static WebSocket<String> pingWs() {
-        return new WebSocket<String>() {
-            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out) {
-                final ActorRef pingActor = Akka.system().actorOf(Props.create(Pinger.class, in, out));
-                final Cancellable cancellable = Akka.system().scheduler().schedule(Duration.create(1, SECONDS),
-                        Duration.create(1, SECONDS),
-                        pingActor,
-                        "Tick",
-                        Akka.system().dispatcher(),
-                        null
-                );
-
-                in.onClose(new F.Callback0() {
-                    @Override
-                    public void invoke() throws Throwable {
-                        cancellable.cancel();
-                    }
-                });
+    public static WebSocket<JsonNode> ws(String username) {
+        return new WebSocket<JsonNode>() {
+            public void onReady(WebSocket.In<JsonNode> in, WebSocket.Out<JsonNode> out) {
+                try {
+                    GameRoom.join(username, in, out);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
 
         };
     }
 
     public static Result pingJs() {
-        return ok(views.js.sockets.ping.render());
+        return ok(views.js.sockets.ping.render("test"));
     }
 
     public static Result index() {

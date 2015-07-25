@@ -3,8 +3,6 @@
 # ~~~~
 
 OPTIONS /*any                       controllers.Application.options(any)
-OPTIONS /                           controllers.Application.options(any="")
-
 
 # Scores
 GET     /scores                           controllers.Score.index()
@@ -12,7 +10,7 @@ POST     /scores                           controllers.Score.create()
 
 # Socket
 GET     /socket                           controllers.Socket.index()
-GET     /socket/pingWs                    controllers.Socket.pingWs()
+GET     /socket/ws                        controllers.Socket.ws(username)
 GET     /assets/javascripts/ping.js       controllers.Socket.pingJs()
 
 

@@ -1,6 +1,7 @@
 package models;
 
 import play.*;
+import play.api.libs.iteratee.Concurrent;
 import play.mvc.*;
 import play.libs.*;
 
@@ -25,6 +26,7 @@ public class Pinger extends UntypedActor {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Calendar cal = Calendar.getInstance();
             out.write(sdf.format(cal.getTime()));
+
         } else {
             unhandled(message);
         }
