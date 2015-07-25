@@ -1,0 +1,13 @@
+New log file opened at Sat Jul 25 00:27:24 CDT 2015 by 87654@Jamis-MacBook-Pro.local
+Taking next connection to: 53254
+New client attempting to connect on port: 53255-53254
+  Address = /192.168.0.106:53254
+This client on port 53255 has uuid 1c59eda5-8d06-4581-b8ce-417f9891dd18 configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-1c59eda5-8d06-4581-b8ce-417f9891dd18
+Taking next connection to: 53254
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 53254
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 53254
