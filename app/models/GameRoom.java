@@ -6,6 +6,7 @@ import akka.actor.UntypedActor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import play.Logger;
 import play.libs.Akka;
 import play.libs.F;
 import play.libs.Json;
@@ -34,7 +35,9 @@ public class GameRoom extends UntypedActor {
             in.onMessage(new F.Callback<JsonNode>() {
                 public void invoke(JsonNode event) {
 
-                    if (event.get("type").asText().equals("gameUpdate")) {
+                    Logger.info("received", event);
+
+                    if (event.has("type") && event.get("type").asText().equals("gameUpdate")) {
                         defaultGame.tell(new GameUpdate(username, event.get("data")), null);
                     } else {
                         // Send a Chat message to the room.
@@ -85,12 +88,17 @@ public class GameRoom extends UntypedActor {
                 getSender().tell("OK", getSelf());
             }
 
-        } else if(message instanceof Chat)  {
+        } else if(message instanceof Chat) {
 
             // Received a Chat message
-            Chat talk = (Chat)message;
+            Chat talk = (Chat) message;
 
             notifyAll("talk", talk.username, talk.text);
+
+        } else if (message instanceof GameUpdate) {
+            GameUpdate gameUpdate = (GameUpdate) message;
+
+            notifyAll("gameUpdate", gameUpdate.username, gameUpdate.data);
 
         } else if(message instanceof Quit)  {
 
@@ -121,6 +129,17 @@ public class GameRoom extends UntypedActor {
                 m.add(u);
             }
 
+            channel.write(event);
+        }
+    }
+
+    public void notifyAll(String kind, String user, JsonNode data) {
+        ObjectNode event = Json.newObject();
+        event.put("kind", kind);
+        event.put("user", user);
+        event.put("data", data);
+
+        for(WebSocket.Out<JsonNode> channel: members.values()) {
             channel.write(event);
         }
     }
